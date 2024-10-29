@@ -2,7 +2,7 @@
 File: BattleShipBoardGame
 Description:An implementation of the classic game Battleship
 
-Author: Christian Alexander
+Authors: Christian Alexander, Alexander Newman
 Class: CSCI-110-71
 Date: 10/23/2024
 
