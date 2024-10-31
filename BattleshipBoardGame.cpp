@@ -24,8 +24,8 @@ const unsigned char NUM_MASK = 0b0000111;
 const unsigned char DIR_MASK = 0b0000001;
 const unsigned char HIT_MASK = 0b1000000;
 
-int P1Board[BOARD_HEIGHT][BOARD_WIDTH];
-int P2Board[BOARD_HEIGHT][BOARD_WIDTH];
+unsigned char P1Board[BOARD_HEIGHT][BOARD_WIDTH];
+unsigned char P2Board[BOARD_HEIGHT][BOARD_WIDTH];
 
 
 /*
@@ -86,7 +86,7 @@ unsigned char ShipToggleHit(unsigned char ship) {
 }
 
 // Check if a ship can be placed at a position
-bool IsLegalShipPos(int board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+bool IsLegalShipPos(unsigned char board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
 	/*
 	checkX = x
 	checkY = y
@@ -106,7 +106,7 @@ bool IsLegalShipPos(int board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned
 }
 
 // Place a ship at a location on the board, returning false if the placement fails
-bool PlaceShip(int (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+bool PlaceShip(unsigned char (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
 	/*
 	if (!IsLegalShipPos(board, x, y, ship)):
 		return false
@@ -128,10 +128,10 @@ bool PlaceShip(int (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned c
 }
 
 // Initialize a board with random ship locations
-void InitializeBoard(int (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
+void PlaceShips(unsigned char (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
 
 // Output board for user
-void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {
+void DisplayBoard(unsigned char board[BOARD_HEIGHT][BOARD_WIDTH]) {
 	// Display column headers
 	cout << " ";
 	for (int i = 0; i < BOARD_WIDTH; i++) {
@@ -159,7 +159,7 @@ void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {
 }
 
 // Check all ships for game over condition
-bool GameOver(int board1[BOARD_HEIGHT][BOARD_WIDTH], int board2[BOARD_HEIGHT][BOARD_WIDTH]) {
+bool GameOver(unsigned char board1[BOARD_HEIGHT][BOARD_WIDTH], unsigned char board2[BOARD_HEIGHT][BOARD_WIDTH]) {
 	// Checking if all ships on either board are sunk
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		for (int j = 0; j < BOARD_WIDTH; j++) {
@@ -178,11 +178,11 @@ void ParsePosition(string position, int &x, int &y) {
 	y = position[1] - '1';
 }
 
-//Initialize game boards with empty cells
-void InitializeBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]){
+// Initialize game boards with empty cells
+void InitializeBoard(unsigned char board[BOARD_HEIGHT][BOARD_WIDTH]){
 	for (int i = 0; i < BOARD_HEIGHT; i++){
 		for (int j = 0; j < BOARD_WIDTH; j++){
-			board[i][j] = EMPTY;
+			board[i][j] = 0;
 		}
 	}
 }
