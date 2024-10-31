@@ -25,17 +25,17 @@ int P1Board[BOARD_HEIGHT][BOARD_WIDTH];
 int P2Board[BOARD_HEIGHT][BOARD_WIDTH];
 
 
-// output board for user
+// Output board for user
 void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {
-	//Display column headers
-	cout <<" ";
-	for (int i = 0; i < BOARD_WIDTH; i++){
+	// Display column headers
+	cout << " ";
+	for (int i = 0; i < BOARD_WIDTH; i++) {
 		cout << i << " ";
 	
 	cout << endl;
 	
-	//Display rows with row numbers and cell status
-	for (int j = 0; j < BOARD_HEIGHT; j++){
+	// Display rows with row numbers and cell status
+	for (int j = 0; j < BOARD_HEIGHT; j++) {
 		if (board[i][j] == EMPTY){
 			cout << "~";
 		}
@@ -53,12 +53,12 @@ void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {
 }
 }
 
-// check all ships for game over condition
+// Check all ships for game over condition
 bool GameOver(int board1[BOARD_HEIGHT][BOARD_WIDTH], int board2[BOARD_HEIGHT][BOARD_WIDTH]) {
-	//Checking if all ships on either board are sunk
-	for (int i = 0; i < BOARD_HEIGHT; i++){
-		for (int j = 0; j < BOARD_WIDTH; j++){
-			if (board1[i][j] == SHIP || board2[i][j] == SHIP){
+	// Checking if all ships on either board are sunk
+	for (int i = 0; i < BOARD_HEIGHT; i++) {
+		for (int j = 0; j < BOARD_WIDTH; j++) {
+			if (board1[i][j] == SHIP || board2[i][j] == SHIP) {
 				return false;
 			}
 		}
@@ -66,9 +66,9 @@ bool GameOver(int board1[BOARD_HEIGHT][BOARD_WIDTH], int board2[BOARD_HEIGHT][BO
 	return true;
 }
 
-// parse the user's input into a board position
+// Parse the user's input into a board position
 void ParsePosition(string position, int &x, int &y) {
-	//Converting letter to row index and number to column index
+	// Converting letter to row index and number to column index
 	x = position[0] - 'A';
 	y = position[1] - '1';
 }
