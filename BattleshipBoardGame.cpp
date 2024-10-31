@@ -19,7 +19,7 @@ const int BOARD_WIDTH = 10;
 const char SHIP = 'S';
 const char HIT = 'X';
 const char MISS = 'O';
-const char EMPTY = '~';
+const unsigned char EMPTY = 0;
 const unsigned char NUM_MASK = 0b0000111;
 const unsigned char DIR_MASK = 0b0000001;
 const unsigned char HIT_MASK = 0b1000000;
@@ -128,34 +128,47 @@ bool PlaceShip(unsigned char (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, 
 }
 
 // Initialize a board with random ship locations
-void PlaceShips(unsigned char (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
+void PlaceAllShips(unsigned char (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
 
 // Output board for user
 void DisplayBoard(unsigned char board[BOARD_HEIGHT][BOARD_WIDTH]) {
 	// Display column headers
-	cout << " ";
+	cout << "  ";
 	for (int i = 0; i < BOARD_WIDTH; i++) {
-		cout << i << " ";
+		cout << i + 1 << " ";
+	}
 	
 	cout << endl;
 	
 	// Display rows with row numbers and cell status
-	for (int j = 0; j < BOARD_HEIGHT; j++) {
-		if (board[i][j] == EMPTY){
-			cout << "~";
-		}
-		else if (board[i][j] == SHIP){
-			cout << "S ";
-		}
-		else if (board[i][j] == HIT){
-			cout << "X ";
-		}
-		else if (board[i][j] == MISS){
-			cout << "O ";
+	// Iterating through rows
+	for (int i = 0; i < BOARD_WIDTH; i++) { 
+		// Output row header
+		cout << static_cast<char>('A' + i) << ' ';
+
+		// Iterating through columns
+		for (int j = 0; j < BOARD_HEIGHT; j++) {
+			unsigned char cell = board[j][i];
+
+			if (cell == EMPTY){
+				cout << "~ ";
+				continue;
+			}
+
+			// HIT_MASK is zero other than the hit bit
+			// we treat this as a hit on an empty cell
+			if (cell == HIT_MASK) {
+				cout << "O ";
+			}
+			else if (ShipIsHit(cell)) {
+				cout << "X ";
+			}
+			else {
+				cout << "S ";
+			}
 		}
 		cout << endl;
 	}
-}
 }
 
 // Check all ships for game over condition
@@ -197,6 +210,9 @@ int main()
 
 	InitializeBoard(P1Board);
 	InitializeBoard(P2Board);
+
+	// test DisplayBoard
+	DisplayBoard(P1Board);
 
 	/*
 
