@@ -219,6 +219,27 @@ void ParsePosition(string position, int &x, int &y) {
 	y = position[1] - '1';
 }
 
+// Get the input position from the user
+void GetInputPosition(int &x, int &y) {
+	/*
+	getline(inputStr)
+
+	while invalid input position:
+		output "Enter position: "
+		getline(inputStr)
+
+		position = ParsePosition(inputStr)
+
+		invalid = IsHit(board[position])
+
+		if position is invalid:
+			error message
+
+	set x ref to input position x
+	set y ref to input position y
+	*/
+}
+
 // Initialize game boards with empty cells
 void InitializeBoard(unsigned char board[BOARD_HEIGHT][BOARD_WIDTH]){
 	for (int i = 0; i < BOARD_HEIGHT; i++){
@@ -258,14 +279,7 @@ int main()
 		DisplayBoard(currentBoard)
 
 
-		while invalid input position:
-			output "Enter position: "
-			getline()
-
-			invalid = currentBoard[position] != 0 (position has already been fired at)
-
-			if position is invalid:
-				error message
+		position = GetInputPosition()
 
 		hit = currentBoard[position] is ship
 		currentMap[position] = hit
@@ -273,6 +287,8 @@ int main()
 		output if a hit or miss
 
 		output "Switch to player 2 and press enter:"
+		// wait for user to press enter by get input into an unused dummy var
+		// getline is probably better since it terminates at a newline
 		cin >> dummy variable
 
 		if turn == player1:
