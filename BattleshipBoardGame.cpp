@@ -22,6 +22,7 @@ const char MISS = 'O';
 const char EMPTY = '~';
 const unsigned char NUM_MASK = 0b0000111;
 const unsigned char DIR_MASK = 0b0000001;
+const unsigned char HIT_MASK = 0b1000000;
 
 int P1Board[BOARD_HEIGHT][BOARD_WIDTH];
 int P2Board[BOARD_HEIGHT][BOARD_WIDTH];
@@ -38,10 +39,10 @@ int P2Board[BOARD_HEIGHT][BOARD_WIDTH];
 */
 unsigned char BuildShip(int length, int direction, int i) {
 	/* a ship is represented by a single byte
-	length (3 bits), direction (1 bit), index (3 bits)
-	in total this is 7 bits, so one bit is unused.
-	these bits are positioned likes so: _diiilll
-	where d is direction, l is length, and i is the index */
+	length (3 bits), direction (1 bit), index (3 bits), hit (1 bit)
+	in total this is 8 bits, or one byte
+	these bits are positioned like so: hdiiilll
+	where d is direction, l is length, i is the index, and h is the hit bit */
 
 	length &= NUM_MASK;
 	i &= NUM_MASK;
@@ -71,6 +72,17 @@ unsigned char ShipSetIndex(unsigned char ship, int i) {
 	ship = (ship >> 3) & ~NUM_MASK;
 
 	return ship | i;
+}
+
+// Returns whether a ship part has been hit
+unsigned char ShipIsHit(unsigned char ship) {
+	bool isHit = (ship & HIT_MASK) << 1;
+	return isHit;
+}
+
+// Toggle a ship part's hit status
+unsigned char ShipToggleHit(unsigned char ship) {
+	return ship ^ HIT_MASK;
 }
 
 // Check if a ship can be placed at a position
@@ -174,8 +186,6 @@ void InitializeBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]){
 		}
 	}
 }
-
-
 
 int main()
 {
