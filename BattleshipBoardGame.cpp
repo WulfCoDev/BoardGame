@@ -20,10 +20,103 @@ const char SHIP = 'S';
 const char HIT = 'X';
 const char MISS = 'O';
 const char EMPTY = '~';
+const unsigned char NUM_MASK = 0b0000111;
+const unsigned char DIR_MASK = 0b0000001;
 
 int P1Board[BOARD_HEIGHT][BOARD_WIDTH];
 int P2Board[BOARD_HEIGHT][BOARD_WIDTH];
 
+
+/*
+	Return an int representing a ship or a part of a ship
+		length: Ship length.
+		direction: 0 for horizontal, 1 for vertical.
+		i: Index of ship part, relative to the ship's position. 
+		   If building a ship and not a single part of a ship, set to 0.
+		   For horizontal ships, 0 indicates the first part starting at the left.
+		   For vertical ships, 0 indicates the first part starting from the top
+*/
+unsigned char BuildShip(int length, int direction, int i) {
+	/* a ship is represented by a single byte
+	length (3 bits), direction (1 bit), index (3 bits)
+	in total this is 7 bits, so one bit is unused.
+	these bits are positioned likes so: _diiilll
+	where d is direction, l is length, and i is the index */
+
+	length &= NUM_MASK;
+	i &= NUM_MASK;
+	direction &= DIR_MASK;
+
+	return length | (i << 3) | (direction << 6);
+}
+
+// Return the length of a ship
+int ShipLen(unsigned char ship) {
+	return ship & NUM_MASK;
+}
+
+// Return the direction of a ship. false for horizontal, true for vertical.
+bool ShipDirection(unsigned char ship) {
+	return (ship >> 6) & DIR_MASK;
+}
+
+// Return the index of a ship
+unsigned char ShipIndex(unsigned char ship) {
+	return (ship >> 3) & NUM_MASK;
+}
+
+// Set the index of a ship, and return the modified ship
+unsigned char ShipSetIndex(unsigned char ship, int i) {
+	i &= NUM_MASK;
+	ship = (ship >> 3) & ~NUM_MASK;
+
+	return ship | i;
+}
+
+// Check if a ship can be placed at a position
+bool IsLegalShipPos(int board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+	/*
+	checkX = x
+	checkY = y
+	isHorizontal = ShipDirection(ship) == HORIZONTAL
+
+	for i = 0 to ShipLen(ship) - 1:
+		if isHorizontal:
+			checkX = x + i;
+		else:
+			checkY = y + i;
+
+		if (board[checkX][checkY] != 0):
+			return false
+
+	return true
+	*/
+}
+
+// Place a ship at a location on the board, returning false if the placement fails
+bool PlaceShip(int (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+	/*
+	if (!IsLegalShipPos(board, x, y, ship)):
+		return false
+
+	curX = x
+	curY = y
+	isHorizontal = ShipDirection(ship) == HORIZONTAL
+
+	for i = 0 to ShipLen(ship) - 1:
+		if isHorizontal:
+			curX = x + i;
+		else:
+			curY = y + i;
+
+		board[curX][curY] = ShipSetIndex(ship, i)
+
+	return true
+	*/
+}
+
+// Initialize a board with random ship locations
+void InitializeBoard(int (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
 
 // Output board for user
 void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {
