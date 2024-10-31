@@ -195,12 +195,14 @@ bool GameOver(unsigned char board1[BOARD_HEIGHT][BOARD_WIDTH], unsigned char boa
 		}
 	}
 
-	// Game isn't finished
 	if (board1Wins && board2Wins) {
+		// Game isn't finished since both sides have not lost
 		winner = 0;
 		return false;
 	}
-	else if (board1Wins) {
+
+	// Game is finished; one side must have lost
+	if (board1Wins) {
 		winner = 1;
 	}
 	else if (board2Wins) {
