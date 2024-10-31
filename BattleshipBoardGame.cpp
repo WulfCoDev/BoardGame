@@ -166,12 +166,29 @@ void ParsePosition(string position, int &x, int &y) {
 	y = position[1] - '1';
 }
 
+//Initialize game boards with empty cells
+void InitializeBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]){
+	for (int i = 0; i < BOARD_HEIGHT; i++){
+		for (int j = 0; j < BOARD_WIDTH; j++){
+			board[i][j] = EMPTY;
+		}
+	}
+}
+
+
 
 int main()
 {
+	
+	int x;
+	int y;
+	bool turn = true;
+	string position;
+
+	InitializeBoard(P1Board);
+	InitializeBoard(P2Board);
+
 	/*
-	InitializeBoard(&P1Board)
-	InitializeBoard(&P2Board)
 
 	array P1Map
 	array P2Map
