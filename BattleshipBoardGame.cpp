@@ -74,8 +74,16 @@ unsigned char ShipSetIndex(unsigned char ship, int i) {
 	return ship | i;
 }
 
+// Check if a cell is a ship
+bool IsShip(unsigned char cell) {
+	// ignore hit bit; set hit bit to 0
+	cell &= ~HIT_MASK;
+
+	return cell != EMPTY;
+}
+
 // Returns whether a ship part has been hit
-unsigned char ShipIsHit(unsigned char ship) {
+bool ShipIsHit(unsigned char ship) {
 	bool isHit = (ship & HIT_MASK) << 1;
 	return isHit;
 }
@@ -171,16 +179,34 @@ void DisplayBoard(unsigned char board[BOARD_HEIGHT][BOARD_WIDTH]) {
 	}
 }
 
-// Check all ships for game over condition
-bool GameOver(unsigned char board1[BOARD_HEIGHT][BOARD_WIDTH], unsigned char board2[BOARD_HEIGHT][BOARD_WIDTH]) {
-	// Checking if all ships on either board are sunk
+// Check all ships for game over condition. Set winner to the winning board, or 0 if game isn't over.
+bool GameOver(unsigned char board1[BOARD_HEIGHT][BOARD_WIDTH], unsigned char board2[BOARD_HEIGHT][BOARD_WIDTH], int &winner) {
+	bool board1Wins = false;
+	bool board2Wins = false;
+
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		for (int j = 0; j < BOARD_WIDTH; j++) {
-			if (board1[i][j] == SHIP || board2[i][j] == SHIP) {
-				return false;
-			}
+			unsigned char cell1 = board1[i][j];
+			unsigned char cell2 = board2[i][j];
+
+			// if an unharmed ship is found, that side must not be the loser
+			board1Wins = IsShip(cell1) && !ShipIsHit(cell1);
+			board2Wins = IsShip(cell2) && !ShipIsHit(cell2);
 		}
 	}
+
+	// Game isn't finished
+	if (board1Wins && board2Wins) {
+		winner = 0;
+		return false;
+	}
+	else if (board1Wins) {
+		winner = 1;
+	}
+	else if (board2Wins) {
+		winner = 2;
+	}
+
 	return true;
 }
 
