@@ -16,16 +16,62 @@ using namespace std;
 
 const int BOARD_HEIGHT = 10;
 const int BOARD_WIDTH = 10;
+const char SHIP = 'S';
+const char HIT = 'X';
+const char MISS = 'O';
+const char EMPTY = '~';
+
+int P1Board[BOARD_HEIGHT][BOARD_WIDTH];
+int P2Board[BOARD_HEIGHT][BOARD_WIDTH];
 
 
 // output board for user
-void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {}
+void DisplayBoard(int board[BOARD_HEIGHT][BOARD_WIDTH]) {
+	//Display column headers
+	cout <<" ";
+	for (int i = 0; i < BOARD_WIDTH; i++){
+		cout << i << " ";
+	
+	cout << endl;
+	
+	//Display rows with row numbers and cell status
+	for (int j = 0; j < BOARD_HEIGHT; j++){
+		if (board[i][j] == EMPTY){
+			cout << "~";
+		}
+		else if (board[i][j] == SHIP){
+			cout << "S ";
+		}
+		else if (board[i][j] == HIT){
+			cout << "X ";
+		}
+		else if (board[i][j] == MISS){
+			cout << "O ";
+		}
+		cout << endl;
+	}
+}
+}
 
 // check all ships for game over condition
-bool GameOver(int board1[BOARD_HEIGHT][BOARD_WIDTH], int board2[BOARD_HEIGHT][BOARD_WIDTH]) {}
+bool GameOver(int board1[BOARD_HEIGHT][BOARD_WIDTH], int board2[BOARD_HEIGHT][BOARD_WIDTH]) {
+	//Checking if all ships on either board are sunk
+	for (int i = 0; i < BOARD_HEIGHT; i++){
+		for (int j = 0; j < BOARD_WIDTH; j++){
+			if (board1[i][j] == SHIP || board2[i][j] == SHIP){
+				return false;
+			}
+		}
+	}
+	return true;
+}
 
 // parse the user's input into a board position
-void ParsePosition(string position, int &x, int &y) {}
+void ParsePosition(string position, int &x, int &y) {
+	//Converting letter to row index and number to column index
+	x = position[0] - 'A';
+	y = position[1] - '1';
+}
 
 
 int main()
