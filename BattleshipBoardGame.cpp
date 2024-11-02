@@ -141,6 +141,21 @@ void GetInputPosition(int &x, int &y) {
 	*/
 }
 
+// Fire missile at opposing player's board, returning hit or miss
+bool FireMissile(char (&targetBoard)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y) {
+	char cell = targetBoard[x][y];
+	bool hit = cell != EMPTY;
+
+	if (hit) {
+		targetBoard[x][y] = HIT;
+	}
+	else {
+		targetBoard[x][y] = MISS;
+	}
+
+	return hit;
+}
+
 // Initialize game boards with empty cells
 void InitializeBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]){
 	for (int i = 0; i < BOARD_HEIGHT; i++){
@@ -161,33 +176,42 @@ int main()
 	InitializeBoard(P1Board);
 	InitializeBoard(P2Board);
 
-	// test DisplayBoard
+	// test functions (temporary)
+	DisplayBoard(P1Board);
+	cout << endl;
+
+	bool hit = FireMissile(P1Board, 0, 0);
+
 	DisplayBoard(P1Board);
 
+	// should output "Miss." (board is initialized to empty)
+	if (hit) {
+		cout << "Hit!";
+	}
+	else {
+		cout << "Miss.";
+	}
+	cout << endl;
+
 	/*
-
-	array P1Map
-	array P2Map
-
 	while not GameOver(P1Board, P2Board):
 		if turn == player1:
 			currentBoard = &P1Board
-			currentMap = &P1Map
+			opposingBoard = &P2Board
 		else:
 			currentBoard = &P2Board
-			currentMap = &P2Map
+			opposingBoard = &P1Board
 
 		DisplayBoard(currentBoard)
 
 
 		position = GetInputPosition()
 
-		hit = currentBoard[position] is ship
-		currentMap[position] = hit
+		hit = FireMissile(opposingBoard, position)
 
 		output if a hit or miss
 
-		output "Switch to player 2 and press enter:"
+		output "Switch to player {opposite player to current player} and press enter:"
 		// wait for user to press enter by get input into an unused dummy var
 		// getline is probably better since it terminates at a newline
 		cin >> dummy variable
