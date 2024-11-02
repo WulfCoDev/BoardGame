@@ -14,6 +14,7 @@ I hereby certify that this program is entirely my own work.
 using namespace std;
 
 
+// TODO: board is square, so width/height can be combined into one BOARD_SIZE constant
 const int BOARD_HEIGHT = 10;
 const int BOARD_WIDTH = 10;
 const int NUM_SHIP_PARTS = 5 + 4 + 4 + 3 + 2;	// length of all five ships
@@ -31,6 +32,9 @@ int P2RemainingShipCells = NUM_SHIP_PARTS;
 
 // Check if a ship can be placed at a position
 bool IsLegalShipPos(char board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+	// TODO: implement IsLegalShipPos
+	// TODO: test IsLegalShipPos
+
 	/*
 	checkX = x
 	checkY = y
@@ -51,6 +55,9 @@ bool IsLegalShipPos(char board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigne
 
 // Place a ship at a location on the board, returning false if the placement fails
 bool PlaceShip(char (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+	// TODO: implement PlaceShip
+	// TODO: test PlaceShip
+
 	/*
 	if (!IsLegalShipPos(board, x, y, ship)):
 		return false
@@ -76,6 +83,9 @@ void PlaceAllShips(char (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
 
 // Output board for user
 void DisplayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]) {
+	// FIXME: display only hits and misses if the displaying the opposing player's board
+	// if you're viewing your own board on your turn, it should also show where the ships are
+
 	// Display column headers
 	cout << "  ";
 	for (int i = 0; i < BOARD_WIDTH; i++) {
@@ -143,6 +153,12 @@ void GetInputPosition(int &x, int &y) {
 
 // Fire missile at opposing player's board, returning hit or miss
 bool FireMissile(char (&targetBoard)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y) {
+	// FIXME: FireMissile should decrement the RemainingShipCells for the player being fired at if a hit
+	// I think instead of passing references to boards we should pass the player, since the boards are global variables
+	// another, maybe better, idea is to use a GetBoard(int player) func that returns a reference to a given player's board
+	// this function would then be passed only the player, x, and y
+	// other functions that don't need to know the player are passed a reference to a board
+
 	char cell = targetBoard[x][y];
 	bool hit = cell != EMPTY;
 
