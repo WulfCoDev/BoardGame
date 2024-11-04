@@ -14,24 +14,22 @@ I hereby certify that this program is entirely my own work.
 using namespace std;
 
 
-// TODO: board is square, so width/height can be combined into one BOARD_SIZE constant
-const int BOARD_HEIGHT = 10;
-const int BOARD_WIDTH = 10;
+const int BOARD_SIZE = 10;
 const int NUM_SHIP_PARTS = 5 + 4 + 4 + 3 + 2;	// length of all five ships
 const char SHIP = 'S';
 const char HIT = 'X';
 const char MISS = 'O';
 const char EMPTY = '~';
 
-char P1Board[BOARD_HEIGHT][BOARD_WIDTH];
-char P2Board[BOARD_HEIGHT][BOARD_WIDTH];
+char P1Board[BOARD_SIZE][BOARD_SIZE];
+char P2Board[BOARD_SIZE][BOARD_SIZE];
 
 int P1RemainingShipCells = NUM_SHIP_PARTS;
 int P2RemainingShipCells = NUM_SHIP_PARTS;
 
 
 // Check if a ship can be placed at a position
-bool IsLegalShipPos(char board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+bool IsLegalShipPos(char board[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char ship) {
 	// TODO: implement IsLegalShipPos
 	// TODO: test IsLegalShipPos
 
@@ -54,7 +52,7 @@ bool IsLegalShipPos(char board[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigne
 }
 
 // Place a ship at a location on the board, returning false if the placement fails
-bool PlaceShip(char (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned char ship) {
+bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char ship) {
 	// TODO: implement PlaceShip
 	// TODO: test PlaceShip
 
@@ -79,16 +77,16 @@ bool PlaceShip(char (&board)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y, unsigned 
 }
 
 // Initialize a board with random ship locations
-void PlaceAllShips(char (&board)[BOARD_HEIGHT][BOARD_WIDTH]) {}
+void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {}
 
 // Output board for user
-void DisplayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]) {
+void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
 	// FIXME: display only hits and misses if the displaying the opposing player's board
 	// if you're viewing your own board on your turn, it should also show where the ships are
 
 	// Display column headers
 	cout << "  ";
-	for (int i = 0; i < BOARD_WIDTH; i++) {
+	for (int i = 0; i < BOARD_SIZE; i++) {
 		cout << i + 1 << " ";
 	}
 	
@@ -96,12 +94,12 @@ void DisplayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]) {
 	
 	// Display rows with row numbers and cell status
 	// Iterating through rows
-	for (int i = 0; i < BOARD_WIDTH; i++) { 
+	for (int i = 0; i < BOARD_SIZE; i++) { 
 		// Output row header
 		cout << static_cast<char>('A' + i) << ' ';
 
 		// Iterating through columns
-		for (int j = 0; j < BOARD_HEIGHT; j++) {
+		for (int j = 0; j < BOARD_SIZE; j++) {
 			char cell = board[j][i];
 
 			cout << cell << ' ';
@@ -111,7 +109,7 @@ void DisplayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]) {
 }
 
 // Set winner to the player that won the game, or 0 if the game is not over
-void GameOver(unsigned char board1[BOARD_HEIGHT][BOARD_WIDTH], unsigned char board2[BOARD_HEIGHT][BOARD_WIDTH], int &winner) {
+void GameOver(unsigned char board1[BOARD_SIZE][BOARD_SIZE], unsigned char board2[BOARD_SIZE][BOARD_SIZE], int &winner) {
 	if (P1RemainingShipCells == 0) {
 		winner = 2;
 	}
@@ -152,7 +150,7 @@ void GetInputPosition(int &x, int &y) {
 }
 
 // Fire missile at opposing player's board, returning hit or miss
-bool FireMissile(char (&targetBoard)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y) {
+bool FireMissile(char (&targetBoard)[BOARD_SIZE][BOARD_SIZE], int x, int y) {
 	// FIXME: FireMissile should decrement the RemainingShipCells for the player being fired at if a hit
 	// I think instead of passing references to boards we should pass the player, since the boards are global variables
 	// another, maybe better, idea is to use a GetBoard(int player) func that returns a reference to a given player's board
@@ -173,9 +171,9 @@ bool FireMissile(char (&targetBoard)[BOARD_HEIGHT][BOARD_WIDTH], int x, int y) {
 }
 
 // Initialize game boards with empty cells
-void InitializeBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]){
-	for (int i = 0; i < BOARD_HEIGHT; i++){
-		for (int j = 0; j < BOARD_WIDTH; j++){
+void InitializeBoard(char board[BOARD_SIZE][BOARD_SIZE]){
+	for (int i = 0; i < BOARD_SIZE; i++){
+		for (int j = 0; j < BOARD_SIZE; j++){
 			board[i][j] = EMPTY;
 		}
 	}
