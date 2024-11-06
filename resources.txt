@@ -1,0 +1,4 @@
+- https://www.geeksforgeeks.org/cin-ignore-function-in-cpp/
+- https://stackoverflow.com/questions/903221/press-enter-to-continue
+- https://www.geeksforgeeks.org/cin-get-in-c-with-examples/
+- https://www.geeksforgeeks.org/how-to-clear-console-in-cpp/
