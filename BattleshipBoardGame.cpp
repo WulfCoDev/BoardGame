@@ -80,7 +80,6 @@ bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned cha
 // Initialize a board with random ship locations
 void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {
     const int shipSizes[] = {5, 4, 4, 3, 2};  // ship lengths
-    srand(static_cast<unsigned int>(time(0)));
 
     for (int i = 0; i < 5; i++) {
         bool placed = false;
@@ -231,6 +230,8 @@ int main()
 	bool turn = true;
 	string position;
 	int winner = 0;
+
+	srand(static_cast<unsigned int>(time(0)));
 
 	InitializeBoard(P1Board);
 	InitializeBoard(P2Board);
