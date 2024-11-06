@@ -100,7 +100,7 @@ void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
 
 		// Iterating through columns
 		for (int j = 0; j < BOARD_SIZE; j++) {
-			char cell = board[j][i];
+			char cell = board[i][j];
 
 			cout << cell << ' ';
 		}
@@ -109,7 +109,7 @@ void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 // Set winner to the player that won the game, or 0 if the game is not over
-void GameOver(unsigned char board1[BOARD_SIZE][BOARD_SIZE], unsigned char board2[BOARD_SIZE][BOARD_SIZE], int &winner) {
+void GameOver(char board1[BOARD_SIZE][BOARD_SIZE], char board2[BOARD_SIZE][BOARD_SIZE], int &winner) {
 	if (P1RemainingShipCells == 0) {
 		winner = 2;
 	}
@@ -122,31 +122,60 @@ void GameOver(unsigned char board1[BOARD_SIZE][BOARD_SIZE], unsigned char board2
 }
 
 // Parse the user's input into a board position
-void ParsePosition(string position, int &x, int &y) {
+bool ParsePosition(string position, int &x, int &y) {
+	// input validation
+	bool invalid = !isalpha(position.at(0));
+	cout << invalid << endl;
+	invalid = invalid || !isdigit(position.at(1));
+	cout << invalid << endl;
+	invalid = invalid || !(position.size() == 2 || position.size() == 3);
+
+	if (position.size() == 3) {
+		invalid = invalid || !isdigit(position.at(2));
+	}
+
+	if (invalid) {
+		return invalid;
+	}
+
 	// Converting letter to row index and number to column index
-	x = position[0] - 'A';
-	y = position[1] - '1';
+	x = tolower(position.at(0)) - 'a';
+
+	if (position.size() == 2) {
+		y = tolower(position.at(1)) - '1';
+	}
+	else {
+		// the only y coord with two characters is 10, which is index 9
+		y = 9;
+	}
+
+	return invalid;
 }
 
 // Get the input position from the user
-void GetInputPosition(int &x, int &y) {
-	/*
-	getline(inputStr)
+void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y) {
+	string inputStr;
+	bool valid;
 
-	while invalid input position:
-		output "Enter position: "
-		getline(inputStr)
+	int inX;
+	int inY;
 
-		position = ParsePosition(inputStr)
+	valid = false;
 
-		invalid = IsHit(board[position])
+	while (!valid) {
+		cout << "Enter position: ";
 
-		if position is invalid:
-			error message
+		cin >> inputStr;
+		valid = !ParsePosition(inputStr, inX, inY);
+		valid = valid && currentBoard[inX][inY] != HIT && currentBoard[inX][inY] != MISS;
 
-	set x ref to input position x
-	set y ref to input position y
-	*/
+		if (!valid) {
+			cout << "Invalid position! Try again." << endl;
+		}
+	}
+
+	x = inX;
+	y = inY;
 }
 
 // Fire missile at opposing player's board, returning hit or miss
@@ -194,9 +223,13 @@ int main()
 	DisplayBoard(P1Board);
 	cout << endl;
 
-	bool hit = FireMissile(P1Board, 0, 0);
+	GetInputPosition(P1Board, x, y);
+
+	bool hit = FireMissile(P1Board, x, y);
 
 	DisplayBoard(P1Board);
+	cout << endl;
+	cout << x << ' ' << y << endl;
 
 	// should output "Miss." (board is initialized to empty)
 	if (hit) {
