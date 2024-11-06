@@ -192,10 +192,6 @@ void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y)
 
 // Fire missile at opposing player's board, returning hit or miss
 bool FireMissile(char targetBoard[BOARD_SIZE][BOARD_SIZE], int x, int y, int &remainingShipCells) {
-    // I think instead of passing references to boards we should pass the player, since the boards are global variables
-	// another, maybe better, idea is to use a GetBoard(int player) func that returns a reference to a given player's board
-	// this function would then be passed only the player, x, and y
-	// other functions that don't need to know the player are passed a reference to a board
 	char cell = targetBoard[x][y];
     bool hit = false;
 
@@ -221,8 +217,6 @@ void InitializeBoard(char board[BOARD_SIZE][BOARD_SIZE]){
 
 int main()
 {
-	//TODO Need to refine the place random ships, on testing, boards were almost identical. or implement player placing ships manually
-
 	int x;
 	int y;
 	bool turn = true;
@@ -261,6 +255,10 @@ int main()
 
         // Display current player's board
         DisplayBoard(*currentBoard);
+		
+		// TODO: display both the current player's board, as well as a view of the hits/misses on the opponent's board
+
+		// TODO: output more newlines & generally format output nicer
 
         // Get player's input position
         GetInputPosition(*currentBoard, x, y);
@@ -290,6 +288,9 @@ int main()
             // Wait for the user to press Enter to switch turns
             cin.ignore(); // Ignore the newline left in the buffer
             cin.get(); // Wait for the user to press Enter
+
+			// TODO: clear terminal when changing turns
+			// https://www.geeksforgeeks.org/how-to-clear-console-in-cpp/
 
             // Switch turns
             turn = !turn; // Toggle the turn between Player 1 and Player 2
