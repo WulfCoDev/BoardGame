@@ -56,7 +56,7 @@ bool IsLegalShipPos(char board[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned c
 }
 
 // Place a ship at a location on the board, returning false if the placement fails
-bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char shipLength, bool isHorizontal) {
+bool PlaceShip(char board[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char shipLength, bool isHorizontal) {
     if (!IsLegalShipPos(board, x, y, shipLength, isHorizontal)) {
         return false;
     }
@@ -78,7 +78,7 @@ bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned cha
 }
 
 // Initialize a board with random ship locations
-void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {
+void PlaceAllShips(char board[BOARD_SIZE][BOARD_SIZE]) {
     const int shipSizes[] = {5, 4, 4, 3, 2};  // ship lengths
 
     for (int i = 0; i < 5; i++) {
@@ -139,9 +139,7 @@ void GameOver(int &winner) {
 bool ParsePosition(string position, int &x, int &y) {
 	// input validation
 	bool invalid = !isalpha(position.at(0));
-	cout << invalid << endl;
 	invalid = invalid || !isdigit(position.at(1));
-	cout << invalid << endl;
 	invalid = invalid || !(position.size() == 2 || position.size() == 3);
 
 	if (position.size() == 3) {
@@ -193,7 +191,7 @@ void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y)
 }
 
 // Fire missile at opposing player's board, returning hit or miss
-bool FireMissile(char (&targetBoard)[BOARD_SIZE][BOARD_SIZE], int x, int y, int &remainingShipCells) {
+bool FireMissile(char targetBoard[BOARD_SIZE][BOARD_SIZE], int x, int y, int &remainingShipCells) {
     // I think instead of passing references to boards we should pass the player, since the boards are global variables
 	// another, maybe better, idea is to use a GetBoard(int player) func that returns a reference to a given player's board
 	// this function would then be passed only the player, x, and y
@@ -239,26 +237,26 @@ int main()
 	PlaceAllShips(P1Board);
 	PlaceAllShips(P2Board);
 
-		// Continue until a winner is found
-	    while (winner == 0) { 
-		// Board for the current player
-        char (*currentBoard)[BOARD_SIZE][BOARD_SIZE]; 
-		// Board for the opponent player
-		char (*opposingBoard)[BOARD_SIZE][BOARD_SIZE]; 
-		// Set remaining ships for Player 1
-        int &remainingShipCells = P1RemainingShipCells; 
 
+	char (*currentBoard)[BOARD_SIZE][BOARD_SIZE] = &P1Board;
+	char (*opposingBoard)[BOARD_SIZE][BOARD_SIZE] = &P2Board;
+	int& opposingShipCells = P2RemainingShipCells;
+
+	// Continue until a winner is found
+	while (winner == 0) { 
 		// Player 1's turn
-        if (turn) {  
-    		currentBoard = &P1Board;
-    		opposingBoard = &P2Board;
-    		cout << "Player 1's turn" << endl;
+		if (turn) {  
+			currentBoard = &P1Board;
+			opposingBoard = &P2Board;
+			opposingShipCells = P2RemainingShipCells;
+			cout << "Player 1's turn!" << endl;
 
 		// Player 2's turn
 		} else {  
-    		currentBoard = &P2Board;
-    		opposingBoard = &P1Board;
-    		cout << "Player 2's turn" << endl;
+			currentBoard = &P2Board;
+			opposingBoard = &P1Board;
+			opposingShipCells = P1RemainingShipCells;
+			cout << "Player 2's turn!" << endl;
 		}
 
         // Display current player's board
@@ -269,7 +267,7 @@ int main()
 
         // Fire missile at the opposing player's board and check for hit or miss
         bool hit;
-		hit = FireMissile(*opposingBoard, x, y, remainingShipCells);
+		hit = FireMissile(*opposingBoard, x, y, opposingShipCells);
 
         // Output whether it's a hit or miss
         if (hit) {
