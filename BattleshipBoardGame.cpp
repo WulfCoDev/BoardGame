@@ -80,7 +80,7 @@ bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned cha
 // Initialize a board with random ship locations
 void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {
     const int shipSizes[] = {5, 4, 4, 3, 2};  // ship lengths
-    srand(time(0));
+    srand(static_cast<unsigned int>(time(0)));
 
     for (int i = 0; i < 5; i++) {
         bool placed = false;
@@ -89,7 +89,7 @@ void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {
             int y = rand() % BOARD_SIZE;
             bool isHorizontal = rand() % 2 == 0;
 
-            placed = PlaceShip(board, x, y, shipSizes[i], isHorizontal);
+            placed = PlaceShip(board, x, y, static_cast<unsigned char>(shipSizes[i]), isHorizontal);
         }
     }
 }
@@ -124,7 +124,7 @@ void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 // Set winner to the player that won the game, or 0 if the game is not over
-void GameOver(char board1[BOARD_SIZE][BOARD_SIZE], char board2[BOARD_SIZE][BOARD_SIZE], int &winner) {
+void GameOver(int &winner) {
 	if (P1RemainingShipCells == 0) {
 		winner = 2;
 	}
@@ -237,27 +237,71 @@ int main()
 	PlaceAllShips(P1Board);
 	PlaceAllShips(P2Board);
 
-	// test functions (temporary)
-	DisplayBoard(P1Board);
-	cout << endl;
+		// Continue until a winner is found
+	    while (winner == 0) { 
+		// Board for the current player
+        char (*currentBoard)[BOARD_SIZE][BOARD_SIZE]; 
+		// Board for the opponent player
+		char (*opposingBoard)[BOARD_SIZE][BOARD_SIZE]; 
+		// Set remaining ships for Player 1
+        int &remainingShipCells = P1RemainingShipCells; 
 
-	GetInputPosition(P1Board, x, y);
+		// Player 1's turn
+        if (turn) {  
+    		currentBoard = &P1Board;
+    		opposingBoard = &P2Board;
+    		cout << "Player 1's turn" << endl;
 
-	bool hit = FireMissile(P1Board, x, y);
+		// Player 2's turn
+		} else {  
+    		currentBoard = &P2Board;
+    		opposingBoard = &P1Board;
+    		cout << "Player 2's turn" << endl;
+		}
 
-	DisplayBoard(P1Board);
-	cout << endl;
-	cout << x << ' ' << y << endl;
+        // Display current player's board
+        DisplayBoard(*currentBoard);
 
-	// should output "Miss." (board is initialized to empty)
-	if (hit) {
-		cout << "Hit!";
-	}
-	else {
-		cout << "Miss.";
-	}
-	cout << endl;
+        // Get player's input position
+        GetInputPosition(*currentBoard, x, y);
 
+        // Fire missile at the opposing player's board and check for hit or miss
+        bool hit;
+		hit = FireMissile(*opposingBoard, x, y, remainingShipCells);
+
+        // Output whether it's a hit or miss
+        if (hit) {
+            cout << "Hit!" << endl;
+        } else {
+            cout << "Miss!" << endl;
+        }
+
+        // Check if the game is over
+        GameOver(winner);
+
+        // If no winner, switch turns
+        if (winner == 0) {
+            if (turn) {
+                cout << "Switch to Player 2 and press Enter: ";
+            } else {
+                cout << "Switch to Player 1 and press Enter: ";
+            }
+
+            // Wait for the user to press Enter to switch turns
+            cin.ignore(); // Ignore the newline left in the buffer
+            cin.get(); // Wait for the user to press Enter
+
+            // Switch turns
+            turn = !turn; // Toggle the turn between Player 1 and Player 2
+        }
+    }
+
+    // Announce the winner
+    if (winner == 1) {
+        cout << "Player 1 wins!" << endl;
+    } else if (winner == 2) {
+        cout << "Player 2 wins!" << endl;
+    }
 
 
 
