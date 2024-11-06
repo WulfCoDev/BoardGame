@@ -10,6 +10,8 @@ I hereby certify that this program is entirely my own work.
 *****************************************************************/
 
 #include <iostream>
+#include <string>
+#include <cctype>
 
 using namespace std;
 
@@ -29,55 +31,68 @@ int P2RemainingShipCells = NUM_SHIP_PARTS;
 
 
 // Check if a ship can be placed at a position
-bool IsLegalShipPos(char board[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char ship) {
-	// TODO: implement IsLegalShipPos
-	// TODO: test IsLegalShipPos
+bool IsLegalShipPos(char board[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char shipLength, bool isHorizontal) {
+    int checkX = x;
+    int checkY = y;
 
-	/*
-	checkX = x
-	checkY = y
-	isHorizontal = ShipDirection(ship) == HORIZONTAL
+    for (int i = 0; i < shipLength; i++) {
+        // Check boundaries
+        if (checkX < 0 || checkX >= BOARD_SIZE || checkY < 0 || checkY >= BOARD_SIZE) {
+            return false;
+        }
+        // Check if the spot is already occupied
+        if (board[checkX][checkY] != EMPTY) {
+            return false;
+        }
 
-	for i = 0 to ShipLen(ship) - 1:
-		if isHorizontal:
-			checkX = x + i;
-		else:
-			checkY = y + i;
-
-		if (board[checkX][checkY] != 0):
-			return false
-
-	return true
-	*/
+        // Update position based on orientation
+        if (isHorizontal) {
+            checkX += 1;
+        } else {
+            checkY += 1;
+        }
+    }
+    return true;
 }
 
 // Place a ship at a location on the board, returning false if the placement fails
-bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char ship) {
-	// TODO: implement PlaceShip
-	// TODO: test PlaceShip
+bool PlaceShip(char (&board)[BOARD_SIZE][BOARD_SIZE], int x, int y, unsigned char shipLength, bool isHorizontal) {
+    if (!IsLegalShipPos(board, x, y, shipLength, isHorizontal)) {
+        return false;
+    }
 
-	/*
-	if (!IsLegalShipPos(board, x, y, ship)):
-		return false
+    int curX = x;
+    int curY = y;
 
-	curX = x
-	curY = y
-	isHorizontal = ShipDirection(ship) == HORIZONTAL
+    for (int i = 0; i < shipLength; i++) {
+        board[curX][curY] = SHIP;
 
-	for i = 0 to ShipLen(ship) - 1:
-		if isHorizontal:
-			curX = x + i;
-		else:
-			curY = y + i;
+        if (isHorizontal) {
+            curX += 1;
+        } else {
+            curY += 1;
+        }
+    }
 
-		board[curX][curY] = ShipSetIndex(ship, i)
-
-	return true
-	*/
+    return true;
 }
 
 // Initialize a board with random ship locations
-void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {}
+void PlaceAllShips(char (&board)[BOARD_SIZE][BOARD_SIZE]) {
+    const int shipSizes[] = {5, 4, 4, 3, 2};  // ship lengths
+    srand(time(0));
+
+    for (int i = 0; i < 5; i++) {
+        bool placed = false;
+        while (!placed) {
+            int x = rand() % BOARD_SIZE;
+            int y = rand() % BOARD_SIZE;
+            bool isHorizontal = rand() % 2 == 0;
+
+            placed = PlaceShip(board, x, y, shipSizes[i], isHorizontal);
+        }
+    }
+}
 
 // Output board for user
 void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
@@ -179,24 +194,23 @@ void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y)
 }
 
 // Fire missile at opposing player's board, returning hit or miss
-bool FireMissile(char (&targetBoard)[BOARD_SIZE][BOARD_SIZE], int x, int y) {
-	// FIXME: FireMissile should decrement the RemainingShipCells for the player being fired at if a hit
-	// I think instead of passing references to boards we should pass the player, since the boards are global variables
+bool FireMissile(char (&targetBoard)[BOARD_SIZE][BOARD_SIZE], int x, int y, int &remainingShipCells) {
+    // I think instead of passing references to boards we should pass the player, since the boards are global variables
 	// another, maybe better, idea is to use a GetBoard(int player) func that returns a reference to a given player's board
 	// this function would then be passed only the player, x, and y
 	// other functions that don't need to know the player are passed a reference to a board
-
 	char cell = targetBoard[x][y];
-	bool hit = cell != EMPTY;
+    bool hit = false;
 
-	if (hit) {
-		targetBoard[x][y] = HIT;
-	}
-	else {
-		targetBoard[x][y] = MISS;
-	}
+    if (cell == SHIP) {
+        targetBoard[x][y] = HIT;
+        remainingShipCells--;
+        hit = true;
+    } else if (cell == EMPTY) {
+        targetBoard[x][y] = MISS;
+    }
 
-	return hit;
+    return hit;
 }
 
 // Initialize game boards with empty cells
@@ -215,9 +229,13 @@ int main()
 	int y;
 	bool turn = true;
 	string position;
+	int winner = 0;
 
 	InitializeBoard(P1Board);
 	InitializeBoard(P2Board);
+
+	PlaceAllShips(P1Board);
+	PlaceAllShips(P2Board);
 
 	// test functions (temporary)
 	DisplayBoard(P1Board);
@@ -239,6 +257,10 @@ int main()
 		cout << "Miss.";
 	}
 	cout << endl;
+
+
+
+
 
 	/*
 	while not GameOver(P1Board, P2Board):
