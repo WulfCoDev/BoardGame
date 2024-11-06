@@ -224,7 +224,8 @@ void InitializeBoard(char board[BOARD_SIZE][BOARD_SIZE]){
 
 int main()
 {
-	
+	//TODO Need to refine the place random ships, on testing, boards were almost identical. or implement player placing ships manually
+
 	int x;
 	int y;
 	bool turn = true;
