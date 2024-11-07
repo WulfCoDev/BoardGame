@@ -94,10 +94,7 @@ void PlaceAllShips(char board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 // Output board for user
-void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
-	// FIXME: display only hits and misses if the displaying the opposing player's board
-	// if you're viewing your own board on your turn, it should also show where the ships are
-
+void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE], bool displayShips) {
 	// Display column headers
 	cout << "  ";
 	for (int i = 0; i < BOARD_SIZE; i++) {
@@ -115,6 +112,10 @@ void DisplayBoard(char board[BOARD_SIZE][BOARD_SIZE]) {
 		// Iterating through columns
 		for (int j = 0; j < BOARD_SIZE; j++) {
 			char cell = board[i][j];
+
+			if (!displayShips && cell == SHIP) {
+				cell = EMPTY;
+			}
 
 			cout << cell << ' ';
 		}
@@ -243,20 +244,25 @@ int main()
 			currentBoard = &P1Board;
 			opposingBoard = &P2Board;
 			opposingShipCells = P2RemainingShipCells;
-			cout << "Player 1's turn!" << endl;
+			cout << "Player 1's turn!";
 
 		// Player 2's turn
 		} else {  
 			currentBoard = &P2Board;
 			opposingBoard = &P1Board;
 			opposingShipCells = P1RemainingShipCells;
-			cout << "Player 2's turn!" << endl;
+			cout << "Player 2's turn!";
 		}
+		cout << endl << endl;
 
-        // Display current player's board
-        DisplayBoard(*currentBoard);
-		
-		// TODO: display both the current player's board, as well as a view of the hits/misses on the opponent's board
+		// Display boards
+		cout << "Opponent board:" << endl;
+        DisplayBoard(*opposingBoard, false);
+		cout << endl;
+
+		cout << "Your board:" << endl;
+		DisplayBoard(*currentBoard, true);
+		cout << endl;
 
 		// TODO: output more newlines & generally format output nicer
 
@@ -269,10 +275,11 @@ int main()
 
         // Output whether it's a hit or miss
         if (hit) {
-            cout << "Hit!" << endl;
+            cout << "Hit!";
         } else {
-            cout << "Miss!" << endl;
+            cout << "Miss!";
         }
+		cout << endl << endl;
 
         // Check if the game is over
         GameOver(winner);
@@ -295,6 +302,8 @@ int main()
             // Switch turns
             turn = !turn; // Toggle the turn between Player 1 and Player 2
         }
+
+		cout << endl << endl;
     }
 
     // Announce the winner
