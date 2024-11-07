@@ -238,7 +238,10 @@ int main()
 	int& opposingShipCells = P2RemainingShipCells;
 
 	// Continue until a winner is found
-	while (winner == 0) { 
+	while (winner == 0) {
+		// TODO: display last turn's result for current player
+		// "Player 1 fired at A1: Miss!"
+
 		// Player 1's turn
 		if (turn) {  
 			currentBoard = &P1Board;
@@ -264,8 +267,7 @@ int main()
 		DisplayBoard(*currentBoard, true);
 		cout << endl;
 
-		// TODO: output more newlines & generally format output nicer
-
+		// TODO: exit if input is "quit" or "q" or user inputs escape
         // Get player's input position
         GetInputPosition(*currentBoard, x, y);
 
@@ -296,14 +298,13 @@ int main()
             cin.ignore(); // Ignore the newline left in the buffer
             cin.get(); // Wait for the user to press Enter
 
-			// TODO: clear terminal when changing turns
-			// https://www.geeksforgeeks.org/how-to-clear-console-in-cpp/
+			// Clear the terminal using ANSI escape codes
+			// Might be OS dependent. probably works on all unix machines
+			cout << "\033[H\033[2J\033[3J" ;
 
             // Switch turns
             turn = !turn; // Toggle the turn between Player 1 and Player 2
         }
-
-		cout << endl << endl;
     }
 
     // Announce the winner
