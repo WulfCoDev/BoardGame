@@ -166,6 +166,7 @@ bool ParsePosition(string position, int &x, int &y) {
 }
 
 // Get the input position from the user
+// InputPosition is set to "Quit" or "Q" if the user inputs "quit"
 void GetInputPosition(char opponentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y, string& inputPosition) {
 	string inputStr;
 	bool valid;
@@ -176,9 +177,17 @@ void GetInputPosition(char opponentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y
 	valid = false;
 
 	while (!valid) {
+		cout << "(enter 'q'/'quit' to quit)" << endl;
 		cout << "Enter position: ";
 
 		cin >> inputStr;
+
+		if (inputStr == "q" || inputStr == "quit") {
+			inX = -1;
+			inY = -1;
+			break;
+		}
+
 		valid = !ParsePosition(inputStr, inX, inY);
 		valid = valid && opponentBoard[inX][inY] != HIT && opponentBoard[inX][inY] != MISS;
 
@@ -294,6 +303,10 @@ int main()
         // Get player's input position
         GetInputPosition(*opposingBoard, x, y, inputPosition);
 
+		if (inputPosition.at(0) == 'Q') {
+			break;
+		}
+
         // Fire missile at the opposing player's board and check for hit or miss
 		hit = FireMissile(*opposingBoard, x, y, opposingShipCells);
 
@@ -327,8 +340,14 @@ int main()
         }
     }
 
-    // Announce the winner
-    cout << "Player " << winner << " wins!" << endl;
+	if (winner != 0) {
+		// Announce the winner
+		cout << "Player " << winner << " wins!" << endl;
+	}
+	else {
+		// winner is unmodified (0) if the user exits early
+		cout << "Exiting..." << endl;
+	}
 
 
 
