@@ -166,7 +166,7 @@ bool ParsePosition(string position, int &x, int &y) {
 }
 
 // Get the input position from the user
-void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y) {
+void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y, string& inputPosition) {
 	string inputStr;
 	bool valid;
 
@@ -187,6 +187,8 @@ void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y)
 		}
 	}
 
+	inputStr.at(0) = toupper(inputStr.at(0));
+	inputPosition = inputStr;
 	x = inX;
 	y = inY;
 }
@@ -216,12 +218,23 @@ void InitializeBoard(char board[BOARD_SIZE][BOARD_SIZE]){
 	}
 }
 
+int SwapPlayer(int player) {
+	if (player == 1) {
+		return 2;
+	}
+	else {
+		return 1;
+	}
+}
+
 int main()
 {
 	int x;
 	int y;
 	bool turn = true;
-	string position;
+	int player = 1;
+	string inputPosition = "none";
+	bool hit;
 	int winner = 0;
 
 	srand(static_cast<unsigned int>(time(0)));
@@ -239,23 +252,33 @@ int main()
 
 	// Continue until a winner is found
 	while (winner == 0) {
-		// TODO: display last turn's result for current player
-		// "Player 1 fired at A1: Miss!"
+		if (inputPosition != "none") {
+			cout << "Player " << SwapPlayer(player);
+			cout << " fired at " << inputPosition << ": ";
+
+			if (hit) {
+				cout << "Hit";
+			}
+			else {
+				cout << "Miss";
+			}
+
+			cout << '!' << endl;
+		}
 
 		// Player 1's turn
 		if (turn) {  
 			currentBoard = &P1Board;
 			opposingBoard = &P2Board;
 			opposingShipCells = P2RemainingShipCells;
-			cout << "Player 1's turn!";
 
 		// Player 2's turn
 		} else {  
 			currentBoard = &P2Board;
 			opposingBoard = &P1Board;
 			opposingShipCells = P1RemainingShipCells;
-			cout << "Player 2's turn!";
 		}
+		cout << "PLayer " << player << "'s turn!";
 		cout << endl << endl;
 
 		// Display boards
@@ -269,10 +292,9 @@ int main()
 
 		// TODO: exit if input is "quit" or "q" or user inputs escape
         // Get player's input position
-        GetInputPosition(*currentBoard, x, y);
+        GetInputPosition(*currentBoard, x, y, inputPosition);
 
         // Fire missile at the opposing player's board and check for hit or miss
-        bool hit;
 		hit = FireMissile(*opposingBoard, x, y, opposingShipCells);
 
         // Output whether it's a hit or miss
@@ -288,11 +310,9 @@ int main()
 
         // If no winner, switch turns
         if (winner == 0) {
-            if (turn) {
-                cout << "Switch to Player 2 and press Enter: ";
-            } else {
-                cout << "Switch to Player 1 and press Enter: ";
-            }
+			player = SwapPlayer(player);
+
+			cout << "Switch to Player " << player << " and press Enter: ";
 
             // Wait for the user to press Enter to switch turns
             cin.ignore(); // Ignore the newline left in the buffer
@@ -308,11 +328,7 @@ int main()
     }
 
     // Announce the winner
-    if (winner == 1) {
-        cout << "Player 1 wins!" << endl;
-    } else if (winner == 2) {
-        cout << "Player 2 wins!" << endl;
-    }
+    cout << "Player " << winner << " wins!" << endl;
 
 
 
