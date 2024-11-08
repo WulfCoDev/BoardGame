@@ -166,7 +166,7 @@ bool ParsePosition(string position, int &x, int &y) {
 }
 
 // Get the input position from the user
-void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y, string& inputPosition) {
+void GetInputPosition(char opponentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y, string& inputPosition) {
 	string inputStr;
 	bool valid;
 
@@ -180,7 +180,7 @@ void GetInputPosition(char currentBoard[BOARD_SIZE][BOARD_SIZE], int &x, int &y,
 
 		cin >> inputStr;
 		valid = !ParsePosition(inputStr, inX, inY);
-		valid = valid && currentBoard[inX][inY] != HIT && currentBoard[inX][inY] != MISS;
+		valid = valid && opponentBoard[inX][inY] != HIT && opponentBoard[inX][inY] != MISS;
 
 		if (!valid) {
 			cout << "Invalid position! Try again." << endl;
@@ -292,7 +292,7 @@ int main()
 
 		// TODO: exit if input is "quit" or "q" or user inputs escape
         // Get player's input position
-        GetInputPosition(*currentBoard, x, y, inputPosition);
+        GetInputPosition(*opposingBoard, x, y, inputPosition);
 
         // Fire missile at the opposing player's board and check for hit or miss
 		hit = FireMissile(*opposingBoard, x, y, opposingShipCells);
