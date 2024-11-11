@@ -2,3 +2,4 @@
 - https://stackoverflow.com/questions/903221/press-enter-to-continue
 - https://www.geeksforgeeks.org/cin-get-in-c-with-examples/
 - https://stackoverflow.com/a/67322430
+- https://www.officialgamerules.org/board-games/battleship
