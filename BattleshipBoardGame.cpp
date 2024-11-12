@@ -299,7 +299,6 @@ int main()
 		DisplayBoard(*currentBoard, true);
 		cout << endl;
 
-		// TODO: exit if input is "quit" or "q" or user inputs escape
         // Get player's input position
         GetInputPosition(*opposingBoard, x, y, inputPosition);
 
