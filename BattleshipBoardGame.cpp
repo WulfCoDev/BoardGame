@@ -257,7 +257,7 @@ int main()
 
 	char (*currentBoard)[BOARD_SIZE][BOARD_SIZE] = &P1Board;
 	char (*opposingBoard)[BOARD_SIZE][BOARD_SIZE] = &P2Board;
-	int& opposingShipCells = P2RemainingShipCells;
+	int *opposingShipCells = &P2RemainingShipCells;
 
 	// Continue until a winner is found
 	while (winner == 0) {
@@ -279,13 +279,13 @@ int main()
 		if (turn) {  
 			currentBoard = &P1Board;
 			opposingBoard = &P2Board;
-			opposingShipCells = P2RemainingShipCells;
+			opposingShipCells = &P2RemainingShipCells;
 
 		// Player 2's turn
 		} else {  
 			currentBoard = &P2Board;
 			opposingBoard = &P1Board;
-			opposingShipCells = P1RemainingShipCells;
+			opposingShipCells = &P1RemainingShipCells;
 		}
 		cout << "PLayer " << player << "'s turn!";
 		cout << endl << endl;
@@ -298,6 +298,7 @@ int main()
 		cout << "Your board:" << endl;
 		DisplayBoard(*currentBoard, true);
 		cout << endl;
+		cout << opposingShipCells << endl;
 
         // Get player's input position
         GetInputPosition(*opposingBoard, x, y, inputPosition);
@@ -307,7 +308,7 @@ int main()
 		}
 
         // Fire missile at the opposing player's board and check for hit or miss
-		hit = FireMissile(*opposingBoard, x, y, opposingShipCells);
+		hit = FireMissile(*opposingBoard, x, y, *opposingShipCells);
 
         // Output whether it's a hit or miss
         if (hit) {
